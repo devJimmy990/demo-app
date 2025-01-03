@@ -1,5 +1,5 @@
 import 'package:demo_app/data/model/item.dart';
-import 'package:demo_app/widgets/snack_bar.dart';
+import 'package:demo_app/screens/shopping/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 
 class ItemCard extends StatefulWidget {

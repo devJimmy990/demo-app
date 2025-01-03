@@ -23,9 +23,9 @@ class OurProducts extends StatelessWidget {
           height: mediaQuery.height * 0.3,
           child: PageView(
             children: [
-              Image.asset("assets/images/1.png", fit: BoxFit.cover),
-              Image.asset("assets/images/2.png", fit: BoxFit.cover),
-              Image.asset("assets/images/3.png", fit: BoxFit.cover),
+              Image.asset("assets/images/products/1.png", fit: BoxFit.cover),
+              Image.asset("assets/images/products/2.png", fit: BoxFit.cover),
+              Image.asset("assets/images/products/3.png", fit: BoxFit.cover),
             ],
           ),
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:demo_app/core/routes.dart';
 import 'package:demo_app/screens/shopping/hot_offers.dart';
 import 'package:demo_app/screens/shopping/our_products.dart';
 import 'package:demo_app/screens/shopping/products_list.dart';
@@ -11,8 +12,11 @@ class ShoppingPage extends StatelessWidget {
     final mediaQuery = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Shopping App'),
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back,color: Colors.white,),
+            onPressed: () =>
+                Navigator.pushReplacementNamed(context, Routes.login)),
+        title: const Text('Shopping App',style: TextStyle(color: Colors.white),),
         backgroundColor: Colors.teal,
       ),
       body: SingleChildScrollView(

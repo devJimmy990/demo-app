@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:demo_app/data/data.dart';
-import 'package:demo_app/widgets/item_card.dart';
+import 'package:demo_app/screens/shopping/widgets/item_card.dart';
 
 class ProductsList extends StatelessWidget {
   const ProductsList({super.key});

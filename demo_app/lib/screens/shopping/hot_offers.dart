@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:demo_app/data/data.dart';
-import 'package:demo_app/widgets/offer_card.dart';
+import 'package:demo_app/screens/shopping/widgets/offer_card.dart';
 
 class HotOffers extends StatelessWidget {
   const HotOffers({super.key});
