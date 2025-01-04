@@ -1,6 +1,7 @@
 import 'widgets/inputs.dart';
 import 'package:flutter/material.dart';
 import 'package:demo_app/core/routes.dart';
+import 'package:demo_app/generated/l10n.dart';
 import 'package:demo_app/screens/auth/func/methods.dart';
 import 'package:demo_app/screens/auth/widgets/snackbar.dart';
 import 'package:demo_app/screens/auth/widgets/auth_option.dart';
@@ -28,8 +29,37 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-
     super.dispose();
+  }
+
+  void onLogin() {
+    if (_formKey.currentState!.validate()) {
+      bool res = isFoundUser(_emailController.text, _passwordController.text);
+      ScaffoldMessenger.of(context).showSnackBar(
+        buildSnackBar(
+          content:
+              res ? S.of(context).login_success : S.of(context).invalid_login,
+          msg: res
+              ? S.of(context).redirect_shopping
+              : S.of(context).create_account_try,
+          backgroundColor: res ? Colors.green : Colors.red,
+          action: SnackBarAction(
+            label: res ? S.of(context).ok : S.of(context).create,
+            textColor: Colors.white,
+            onPressed: () {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.register,
+              );
+            },
+          ),
+        ),
+      );
+      if (res) {
+        Navigator.pushReplacementNamed(context, Routes.shopping);
+      }
+    }
   }
 
   @override
@@ -53,69 +83,17 @@ class _LoginPageState extends State<LoginPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        InputField(
-                          label: "Email or Username",
-                          icon: Icons.email,
-                          controller: _emailController,
-                          validator: (value) {
-                            if (_emailController.text.isEmpty) {
-                              return "required";
-                            }
-                            return null;
-                          },
-                        ),
-                        PasswordInputField(
-                          label: "Password",
-                          controller: _passwordController,
-                          validator: (value) {
-                            if (_emailController.text.isEmpty) {
-                              return "required";
-                            }
-                            return null;
-                          },
+                        LoginForm(
+                          emailController: _emailController,
+                          passwordController: _passwordController,
                         ),
                         ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              // final email = _emailController.text;
-                              // final password = _passwordController.text;
-                              bool res = isFoundUser(_emailController.text,
-                                  _passwordController.text);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                buildSnackBar(
-                                  content: res
-                                      ? "Login Successful"
-                                      : "Invalid email or password",
-                                  msg: res
-                                      ? "will redirect to shopping page"
-                                      : "create account or try again",
-                                  backgroundColor:
-                                      res ? Colors.green : Colors.red,
-                                  action: SnackBarAction(
-                                    label: res ? "OK" : "create",
-                                    textColor: Colors.white,
-                                    onPressed: () {
-                                      ScaffoldMessenger.of(context)
-                                          .hideCurrentSnackBar();
-                                      Navigator.pushReplacementNamed(
-                                        context,
-                                        Routes.register,
-                                      );
-                                    },
-                                  ),
-                                ),
-                              );
-                              if (res) {
-                                Navigator.pushReplacementNamed(
-                                    context, Routes.shopping);
-                              }
-                            }
-                          },
-                          child: const Text("Login"),
+                          onPressed: onLogin,
+                          child: Text(S.of(context).login),
                         ),
                         buildAuthOption(
-                          msg: "Don't have an account? ",
-                          action: "create account",
+                          msg: "${S.of(context).no_account} ",
+                          action: S.of(context).create,
                           onTap: () => Navigator.pushReplacementNamed(
                               context, Routes.register),
                         ),
@@ -128,6 +106,46 @@ class _LoginPageState extends State<LoginPage> {
           },
         ),
       ),
+    );
+  }
+}
+
+class LoginForm extends StatelessWidget {
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  const LoginForm({
+    super.key,
+    required this.emailController,
+    required this.passwordController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      spacing: 20,
+      children: [
+        InputField(
+          label: S.of(context).email_username,
+          icon: Icons.email,
+          controller: emailController,
+          validator: (value) {
+            if (emailController.text.isEmpty) {
+              return S.of(context).required;
+            }
+            return null;
+          },
+        ),
+        PasswordInputField(
+          label: S.of(context).password,
+          controller: passwordController,
+          validator: (value) {
+            if (emailController.text.isEmpty) {
+              return S.of(context).required;
+            }
+            return null;
+          },
+        ),
+      ],
     );
   }
 }

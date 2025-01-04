@@ -1,5 +1,7 @@
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:demo_app/core/routes.dart';
+import 'package:demo_app/generated/l10n.dart';
 import 'package:demo_app/screens/shopping/hot_offers.dart';
 import 'package:demo_app/screens/shopping/our_products.dart';
 import 'package:demo_app/screens/shopping/products_list.dart';
@@ -13,10 +15,23 @@ class ShoppingPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-            icon: const Icon(Icons.arrow_back,color: Colors.white,),
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
             onPressed: () =>
                 Navigator.pushReplacementNamed(context, Routes.login)),
-        title: const Text('Shopping App',style: TextStyle(color: Colors.white),),
+        title: Text(
+          S.of(context).shopping_app_bar,
+          style: TextStyle(color: Colors.white),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () {
+                S.load(Locale(Intl.getCurrentLocale() == "en" ? "ar" : "en"));
+              },
+              child: Text(Intl.getCurrentLocale() == "en" ? "ar" : "en"))
+        ],
         backgroundColor: Colors.teal,
       ),
       body: SingleChildScrollView(

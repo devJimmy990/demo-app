@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:demo_app/generated/l10n.dart';
 
 class OurProducts extends StatelessWidget {
   const OurProducts({super.key});
@@ -10,8 +11,8 @@ class OurProducts extends StatelessWidget {
       spacing: 10,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Our Products",
+        Text(
+          S.of(context).our_products,
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,

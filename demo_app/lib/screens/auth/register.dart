@@ -1,10 +1,11 @@
-import 'package:demo_app/core/routes.dart';
-import 'package:demo_app/screens/auth/func/methods.dart';
-import 'package:demo_app/screens/auth/func/validator.dart';
-import 'package:demo_app/screens/auth/widgets/auth_option.dart';
-import 'package:demo_app/screens/auth/widgets/snackbar.dart';
-import 'package:flutter/material.dart';
 import 'widgets/inputs.dart';
+import 'package:flutter/material.dart';
+import 'package:demo_app/core/routes.dart';
+import 'package:demo_app/generated/l10n.dart';
+import 'package:demo_app/core/string_extension.dart';
+import 'package:demo_app/screens/auth/func/methods.dart';
+import 'package:demo_app/screens/auth/widgets/snackbar.dart';
+import 'package:demo_app/screens/auth/widgets/auth_option.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
@@ -79,52 +80,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           confirmPasswordController: _confirmPasswordController,
                         ),
                         ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              final Map<String, bool> res = isUserAddedBefore(
-                                  _emailController.text,
-                                  _usernameController.text);
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(buildSnackBar(
-                                content: res["status"] == false
-                                    ? "Account Created Successfully"
-                                    : res["email"] == true
-                                        ? "This email already exist"
-                                        : "This username already exist",
-                                msg: res["status"] == false
-                                    ? "will redirect to shopping page"
-                                    : "redirect to login page",
-                                backgroundColor: res["status"] == false
-                                    ? Colors.green
-                                    : Colors.red,
-                                action: SnackBarAction(
-                                  label:
-                                      res["status"] == false ? "OK" : "create",
-                                  textColor: Colors.white,
-                                  onPressed: () {
-                                    ScaffoldMessenger.of(context)
-                                        .hideCurrentSnackBar();
-                                    Navigator.pushReplacementNamed(
-                                      context,
-                                      Routes.register,
-                                    );
-                                  },
-                                ),
-                              ));
-
-                              if (res["status"] == false) {
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  Routes.shopping,
-                                );
-                              }
-                            }
-                          },
-                          child: const Text("Create Account"),
+                          onPressed: onCreateAccount,
+                          child:
+                              Text(S.of(context).create_account.capitalize()),
                         ),
                         buildAuthOption(
-                          msg: "Already have an account?  ",
-                          action: "login",
+                          msg: "${S.of(context).have_account}  ",
+                          action: S.of(context).login,
                           onTap: () => Navigator.pushReplacementNamed(
                               context, Routes.login),
                         ),
@@ -138,6 +100,43 @@ class _RegistrationPageState extends State<RegistrationPage> {
         ),
       ),
     );
+  }
+
+  void onCreateAccount() {
+    if (_formKey.currentState!.validate()) {
+      final Map<String, bool> res =
+          isUserAddedBefore(_emailController.text, _usernameController.text);
+      ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
+        content: res["status"] == false
+            ? S.of(context).account_created
+            : res["email"] == true
+                ? S.of(context).email_exist
+                : S.of(context).username_exist,
+        msg: res["status"] == false
+            ? S.of(context).redirect_shopping
+            : S.of(context).redirect_login,
+        backgroundColor: res["status"] == false ? Colors.green : Colors.red,
+        action: SnackBarAction(
+          label:
+              res["status"] == false ? S.of(context).ok : S.of(context).login,
+          textColor: Colors.white,
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            Navigator.pushReplacementNamed(
+              context,
+              Routes.register,
+            );
+          },
+        ),
+      ));
+
+      if (res["status"] == false) {
+        Navigator.pushReplacementNamed(
+          context,
+          Routes.shopping,
+        );
+      }
+    }
   }
 }
 
@@ -170,54 +169,121 @@ class RegistrationForm extends StatelessWidget {
           children: [
             Expanded(
               child: InputField(
-                label: "First Name",
                 icon: Icons.person,
                 controller: firstNameController,
-                validator: Validator.validateName,
+                label: S.of(context).first_name,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return S.of(context).required;
+                  } else if (value[0] != value[0].toUpperCase()) {
+                    return S.of(context).capital_name;
+                  } else if (value.length < 3) {
+                    return S.of(context).short_name;
+                  } else if (value.length > 15) {
+                    return S.of(context).long_name;
+                  } else if (!RegExp(r"^[a-zA-Z]+$").hasMatch(value)) {
+                    return S.of(context).invalid_name;
+                  }
+                  return null;
+                },
               ),
             ),
             Expanded(
               child: InputField(
-                label: "Second Name",
                 icon: Icons.person,
                 controller: lastNameController,
-                validator: Validator.validateName,
+                label: S.of(context).last_name,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return S.of(context).required;
+                  } else if (value[0] != value[0].toUpperCase()) {
+                    return S.of(context).capital_name;
+                  } else if (value.length < 3) {
+                    return S.of(context).short_name;
+                  } else if (value.length > 15) {
+                    return S.of(context).long_name;
+                  } else if (!RegExp(r"^[a-zA-Z]+$").hasMatch(value)) {
+                    return S.of(context).invalid_name;
+                  }
+                  return null;
+                },
               ),
             ),
           ],
         ),
         InputField(
-          phone: true,
-          label: "Phone Number",
-          icon: Icons.phone_android,
-          controller: phoneController,
-          validator: Validator.validatePhone,
-        ),
+            phone: true,
+            icon: Icons.phone_android,
+            controller: phoneController,
+            label: S.of(context).phone_number,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return S.of(context).required;
+              } else if (!RegExp(r"^01[0125]\d{8}$").hasMatch(value)) {
+                return S.of(context).invalid_phone;
+              }
+              return null;
+            }),
         InputField(
-          email: true,
-          label: "Username",
-          icon: Icons.account_circle,
-          controller: usernameController,
-          validator: Validator.validateUsername,
-        ),
+            email: true,
+            icon: Icons.account_circle,
+            label: S.of(context).username,
+            controller: usernameController,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return S.of(context).required;
+              } else if (value.length < 3) {
+                return S.of(context).short_username;
+              } else if (value.length > 15) {
+                return S.of(context).long_username;
+              } else if (!RegExp(r"^[a-zA-Z0-9@-_#]+$").hasMatch(value)) {
+                return S.of(context).strong_username;
+              }
+              return null;
+            }),
         InputField(
-          email: true,
-          label: "Email",
-          icon: Icons.email,
-          controller: emailController,
-          validator: Validator.validateEmail,
-        ),
+            email: true,
+            icon: Icons.email,
+            label: S.of(context).email,
+            controller: emailController,
+            validator: (value) {
+              final regex =
+                  RegExp(r"^[a-zA-Z0-9_-]+@([a-zA-Z]+\.)+[a-zA-Z]{2,}$");
+              if (value == null || value.isEmpty) {
+                return S.of(context).required;
+              } else if (!regex.hasMatch(value)) {
+                return S.of(context).invalid_email;
+              }
+              return null;
+            }),
         PasswordInputField(
-          label: "Password",
+          label: S.of(context).password,
           controller: passwordController,
-          validator: Validator.validatePassword,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return S.of(context).required;
+            } else if (value.length < 6) {
+              return S.of(context).short_password;
+            }
+            if (!RegExp(
+                    r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&\-])[A-Za-z\d@$!%*?&-]{6,}$")
+                .hasMatch(value)) {
+              return S.of(context).invalid_password;
+            }
+            return null;
+          },
         ),
         PasswordInputField(
-          label: "Confirm Password",
-          controller: confirmPasswordController,
-          validator: (value) =>
-              Validator.validateConfirmPassword(value, passwordController.text),
-        ),
+            label: S.of(context).confirm_password,
+            controller: confirmPasswordController,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return S.of(context).required;
+              } else if (value != passwordController.text) {
+                return "Passwords do not match";
+              }
+              return null;
+            }),
       ],
     );
   }
