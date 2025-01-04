@@ -3,7 +3,9 @@ import 'package:demo_app/screens/auth/func/methods.dart';
 import 'package:demo_app/screens/auth/func/validator.dart';
 import 'package:demo_app/screens/auth/widgets/auth_option.dart';
 import 'package:demo_app/screens/auth/widgets/snackbar.dart';
+import 'package:demo_app/screens/shopping/page.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'widgets/inputs.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -48,6 +50,46 @@ class _RegistrationPageState extends State<RegistrationPage> {
     super.dispose();
   }
 
+  void onCreateAccount() {
+    if (_formKey.currentState!.validate()) {
+      final Map<String, bool> res =
+          isUserAddedBefore(_emailController.text, _usernameController.text);
+      ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
+        content: res["status"] == false
+            ? "Account Created Successfully"
+            : res["email"] == true
+                ? "This email already exist"
+                : "This username already exist",
+        msg: res["status"] == false
+            ? "will redirect to shopping page"
+            : "redirect to login page",
+        backgroundColor: res["status"] == false ? Colors.green : Colors.red,
+        action: SnackBarAction(
+          label: res["status"] == false ? "OK" : "create",
+          textColor: Colors.white,
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            Navigator.pushReplacementNamed(
+              context,
+              Routes.register,
+            );
+          },
+        ),
+      ));
+
+      if (res["status"] == false) {
+        Navigator.pushReplacement(
+          context,
+          PageTransition(
+            type: PageTransitionType.fade,
+            duration: const Duration(milliseconds: 1000),
+            child: const ShoppingPage(),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,47 +121,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           confirmPasswordController: _confirmPasswordController,
                         ),
                         ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              final Map<String, bool> res = isUserAddedBefore(
-                                  _emailController.text,
-                                  _usernameController.text);
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(buildSnackBar(
-                                content: res["status"] == false
-                                    ? "Account Created Successfully"
-                                    : res["email"] == true
-                                        ? "This email already exist"
-                                        : "This username already exist",
-                                msg: res["status"] == false
-                                    ? "will redirect to shopping page"
-                                    : "redirect to login page",
-                                backgroundColor: res["status"] == false
-                                    ? Colors.green
-                                    : Colors.red,
-                                action: SnackBarAction(
-                                  label:
-                                      res["status"] == false ? "OK" : "create",
-                                  textColor: Colors.white,
-                                  onPressed: () {
-                                    ScaffoldMessenger.of(context)
-                                        .hideCurrentSnackBar();
-                                    Navigator.pushReplacementNamed(
-                                      context,
-                                      Routes.register,
-                                    );
-                                  },
-                                ),
-                              ));
-
-                              if (res["status"] == false) {
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  Routes.shopping,
-                                );
-                              }
-                            }
-                          },
+                          onPressed: onCreateAccount,
                           child: const Text("Create Account"),
                         ),
                         buildAuthOption(

@@ -1,9 +1,13 @@
+import 'package:demo_app/screens/auth/register.dart';
+import 'package:demo_app/screens/shopping/page.dart';
+
 import 'widgets/inputs.dart';
 import 'package:flutter/material.dart';
 import 'package:demo_app/core/routes.dart';
 import 'package:demo_app/screens/auth/func/methods.dart';
 import 'package:demo_app/screens/auth/widgets/snackbar.dart';
 import 'package:demo_app/screens/auth/widgets/auth_option.dart';
+import 'package:page_transition/page_transition.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -30,6 +34,59 @@ class _LoginPageState extends State<LoginPage> {
     _passwordController.dispose();
 
     super.dispose();
+  }
+
+  void onLogin() {
+    if (_formKey.currentState!.validate()) {
+      final res = isFoundUser(_emailController.text, _passwordController.text);
+      final snackBar = buildSnackBar(
+        content: res ? "Login Successful" : "Invalid email or password",
+        msg: res
+            ? "Redirecting to shopping page"
+            : "Create an account or try again",
+        backgroundColor: res ? Colors.green : Colors.red,
+        action: SnackBarAction(
+          label: res ? "OK" : "Create",
+          onPressed: () {
+            if (!res) {
+              Navigator.pushReplacementNamed(context, Routes.register);
+            }
+          },
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+      if (res) {
+        Navigator.pushReplacement(
+          context,
+          PageTransition(
+            type: PageTransitionType.fade,
+            duration: const Duration(milliseconds: 1000),
+            child: const ShoppingPage(),
+          ),
+        );
+      }
+    }
+  }
+
+  Route _createRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          const RegistrationPage(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
   }
 
   @override
@@ -75,42 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                           },
                         ),
                         ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              // final email = _emailController.text;
-                              // final password = _passwordController.text;
-                              bool res = isFoundUser(_emailController.text,
-                                  _passwordController.text);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                buildSnackBar(
-                                  content: res
-                                      ? "Login Successful"
-                                      : "Invalid email or password",
-                                  msg: res
-                                      ? "will redirect to shopping page"
-                                      : "create account or try again",
-                                  backgroundColor:
-                                      res ? Colors.green : Colors.red,
-                                  action: SnackBarAction(
-                                    label: res ? "OK" : "create",
-                                    textColor: Colors.white,
-                                    onPressed: () {
-                                      ScaffoldMessenger.of(context)
-                                          .hideCurrentSnackBar();
-                                      Navigator.pushReplacementNamed(
-                                        context,
-                                        Routes.register,
-                                      );
-                                    },
-                                  ),
-                                ),
-                              );
-                              if (res) {
-                                Navigator.pushReplacementNamed(
-                                    context, Routes.shopping);
-                              }
-                            }
-                          },
+                          onPressed: onLogin,
                           child: const Text("Login"),
                         ),
                         buildAuthOption(
