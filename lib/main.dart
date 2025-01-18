@@ -1,7 +1,10 @@
+import 'package:demo_app/core/shared_preferences.dart';
 import 'package:demo_app/presentation/screens/home.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SharedPreference.initialize();
   runApp(const MyApp());
 }
 

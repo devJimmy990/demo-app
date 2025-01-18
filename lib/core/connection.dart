@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:demo_app/model/dio_response.dart';
+import 'package:demo_app/core/shared_preferences.dart';
+import 'package:demo_app/data/model/dio_response.dart';
 
 class Connection {
   static final Dio _dio = Dio();
@@ -12,6 +14,8 @@ class Connection {
   Future<DioResponse> get({required String url}) async {
     try {
       final response = await _dio.get("https://dummyjson.com/users");
+      SharedPreference.setString(
+          key: "users", value: jsonEncode(response.data["users"]));
       return DioResponse.success(response.data["users"]);
     } on DioException catch (e) {
       if (e.response?.statusCode == 409) {
