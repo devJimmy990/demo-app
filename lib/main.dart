@@ -2,6 +2,7 @@ import 'package:demo_app/core/shared_preferences.dart';
 import 'package:demo_app/cubit/counter/counter_cubit.dart';
 import 'package:demo_app/cubit/theme/theme_cubit.dart';
 import 'package:demo_app/cubit/theme/theme_state.dart';
+import 'package:demo_app/presentation/screens/counter.dart';
 import 'package:demo_app/presentation/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: themeData,
-            home: const HomeScreen(),
+            home: const CounterScreen(),
           );
         },
       ),
