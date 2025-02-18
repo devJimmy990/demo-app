@@ -22,7 +22,20 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: BlocBuilder<CounterCubit, CounterState>(
+        title: BlocConsumer<CounterCubit, CounterState>(
+          listener: (context, state) {
+            if (state is CounterChangeValue) {
+              if (state.value == 5 || state.value == -5) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                        'Counter reached ${state.value > 0 ? "" : "-"}5!'),
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
+              }
+            }
+          },
           builder: (context, state) {
             if (state is CounterChangeValue) {
               return Text("Counter Value: ${state.value}");

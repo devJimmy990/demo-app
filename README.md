@@ -1,23 +1,28 @@
-# Data Handling - API
+# State Management
 
-##  displays user details
-Fetch employee data using Dio and implement error handling using try-catch then parse JSON responses and map them to model then cache the employee list locally.
+##  create different blocs
+Dealing with different Types of Blocs.
 
 
-- Title: Shows detailed information about the selected employee, including their name, position, and salaries
-- Description: 
-    - Fetch employee data using dio from the API endpoint: https://dummyjson.com/users.
-    - Implement proper error handling using try-catch.
-    - Navigate between two screens and pass data to the details page.
-    - Display a loading indicator while fetching data.
-    - Cache the employee list locally using shared_preferences and load it on app restart.
-
+- Requirement1: 
+  - Title: Create two different BLoCs
+  - Description:
+    - A CounterBloc to handle integer value
+    - A ThemeBloc to toggle between light and dark themes.
+- Requirement2: 
+  - Title: Bloc Listener & Bloc Builder & Bloc Consumer.
+  - Description:
+    - Use BlocListener in a small app to show a SnackBar when the counter reaches a specific value.
+    - Display the counter value using BlocBuilder and update the UI whenever the counter changes.
+    - Combine BlocListener and BlocBuilder in a single widget using BlocConsumer to display the counter and show a SnackBar for specific counter values
+    
+   
 ==================================================
 #### Draft
-  - `based on` api - list of users task `https://github.com/devJimmy990/demo-app/tree/api-display-list-of-employees`
-  - add `shared_preferences` for local caching. 
-  - define `user-model` to map data.
-  - initialize `singleton-shared_preferences` class with {getSting, setString} methods.
-  - `on-restart` check caching data:
-    - case: have cached `parse` data to list and display directly.
-    - case: no cached use `api` to load data and then cached them.
+
+  - create different `cubits` for theme and counter. 
+  - create `cubit_state` to notify any changes.
+  - create `cubit_logic` to handle all changes and logics.
+  - use `BlocProvider` to notify the app of using cubit.
+  - use `BlocBuilder` to change view based on any changes on state.
+  - use `BlocListener` to show snackbar based on state.
