@@ -1,5 +1,6 @@
-class Routes{
-  static const String home = "home";
-  static const String login = "login";
-  static const String register = "register";
+class Routes {
+  static const String shopping = "shopping";
+
+  static const String login = "auth/login";
+  static const String register = "auth/register";
 }

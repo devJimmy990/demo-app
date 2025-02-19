@@ -85,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
 
                               if (res) {
                                 Navigator.pushReplacementNamed(
-                                    context, Routes.home);
+                                    context, Routes.shopping);
                               }
                             }
                           },

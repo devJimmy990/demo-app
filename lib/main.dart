@@ -1,3 +1,4 @@
+import 'package:demo_app/presentation/shopping/page.dart';
 import 'package:flutter/material.dart';
 import 'package:demo_app/core/routes.dart';
 import 'package:demo_app/presentation/screens/home/page.dart';
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         Routes.login: (context) => LoginPage(),
-        Routes.home: (context) => HomePage(),
+        Routes.shopping: (context) => ShoppingPage(),
         Routes.register: (context) => RegistrationPage(),
       },
       initialRoute: Routes.login,
