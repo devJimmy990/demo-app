@@ -1,6 +1,6 @@
+import 'package:demo_app/presentation/widgets/shopping/item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:demo_app/data/data.dart';
-import 'package:demo_app/screens/shopping/widgets/item_card.dart';
 
 class ProductsList extends StatelessWidget {
   const ProductsList({super.key});
@@ -8,7 +8,7 @@ class ProductsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-    spacing: 10,
+      spacing: 10,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(

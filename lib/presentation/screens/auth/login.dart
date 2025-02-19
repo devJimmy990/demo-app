@@ -1,9 +1,8 @@
-import 'widgets/inputs.dart';
+import '../../widgets/ui/inputs.dart';
 import 'package:flutter/material.dart';
 import 'package:demo_app/core/routes.dart';
-import 'package:demo_app/screens/auth/func/methods.dart';
-import 'package:demo_app/screens/auth/widgets/snackbar.dart';
-import 'package:demo_app/screens/auth/widgets/auth_option.dart';
+import 'package:demo_app/presentation/widgets/auth/auth_option.dart';
+import 'package:demo_app/presentation/screens/auth/func/methods.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -77,37 +76,16 @@ class _LoginPageState extends State<LoginPage> {
                         ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              // final email = _emailController.text;
-                              // final password = _passwordController.text;
-                              bool res = isFoundUser(_emailController.text,
-                                  _passwordController.text);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                buildSnackBar(
-                                  content: res
-                                      ? "Login Successful"
-                                      : "Invalid email or password",
-                                  msg: res
-                                      ? "will redirect to shopping page"
-                                      : "create account or try again",
-                                  backgroundColor:
-                                      res ? Colors.green : Colors.red,
-                                  action: SnackBarAction(
-                                    label: res ? "OK" : "create",
-                                    textColor: Colors.white,
-                                    onPressed: () {
-                                      ScaffoldMessenger.of(context)
-                                          .hideCurrentSnackBar();
-                                      Navigator.pushReplacementNamed(
-                                        context,
-                                        Routes.register,
-                                      );
-                                    },
-                                  ),
-                                ),
+                              bool res = isFoundUser(
+                                _emailController.text,
+                                _passwordController.text,
                               );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  _buildLoginSnackBar(res, context));
+
                               if (res) {
                                 Navigator.pushReplacementNamed(
-                                    context, Routes.shopping);
+                                    context, Routes.home);
                               }
                             }
                           },
@@ -127,6 +105,50 @@ class _LoginPageState extends State<LoginPage> {
             );
           },
         ),
+      ),
+    );
+  }
+
+  SnackBar _buildLoginSnackBar(bool res, BuildContext context) {
+    return SnackBar(
+      backgroundColor: res ? Colors.green : Colors.red,
+      content: RichText(
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text:
+                  '${res ? "Login Successful" : "Invalid email or password"}\n',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            TextSpan(
+              text: res
+                  ? "will redirect to shopping page"
+                  : "create account or try again",
+              style: const TextStyle(
+                fontSize: 15,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontStyle: FontStyle.italic,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ],
+        ),
+      ),
+      duration: const Duration(seconds: 2),
+      action: SnackBarAction(
+        label: res ? "OK" : "create",
+        textColor: Colors.white,
+        onPressed: () {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          Navigator.pushReplacementNamed(
+            context,
+            Routes.register,
+          );
+        },
       ),
     );
   }

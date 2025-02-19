@@ -1,8 +1,8 @@
-# Flutter Fundamentals - Navigation Module
+# Advanced Flutter Development - Firebase Module
 
 ##  Create signUp page
 based on the task which you were asked to make shopping app interface
-make signup page to access the shopping screen
+make sign-up page to access the shopping screen
 (Note you are asked to create each page as a new file in the lib folder in your project)"
 
 - Title: create SignUp page

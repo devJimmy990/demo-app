@@ -1,10 +1,9 @@
-import 'package:demo_app/core/routes.dart';
-import 'package:demo_app/screens/auth/func/methods.dart';
-import 'package:demo_app/screens/auth/func/validator.dart';
-import 'package:demo_app/screens/auth/widgets/auth_option.dart';
-import 'package:demo_app/screens/auth/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
-import 'widgets/inputs.dart';
+import 'package:demo_app/core/routes.dart';
+import 'package:demo_app/presentation/widgets/ui/inputs.dart';
+import 'package:demo_app/presentation/widgets/auth/auth_option.dart';
+import 'package:demo_app/presentation/screens/auth/func/methods.dart';
+import 'package:demo_app/presentation/screens/auth/func/validator.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
@@ -69,7 +68,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        RegistrationForm(
+                        _RegistrationForm(
                           phoneController: _phoneController,
                           emailController: _emailController,
                           usernameController: _usernameController,
@@ -84,38 +83,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               final Map<String, bool> res = isUserAddedBefore(
                                   _emailController.text,
                                   _usernameController.text);
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(buildSnackBar(
-                                content: res["status"] == false
-                                    ? "Account Created Successfully"
-                                    : res["email"] == true
-                                        ? "This email already exist"
-                                        : "This username already exist",
-                                msg: res["status"] == false
-                                    ? "will redirect to shopping page"
-                                    : "redirect to login page",
-                                backgroundColor: res["status"] == false
-                                    ? Colors.green
-                                    : Colors.red,
-                                action: SnackBarAction(
-                                  label:
-                                      res["status"] == false ? "OK" : "create",
-                                  textColor: Colors.white,
-                                  onPressed: () {
-                                    ScaffoldMessenger.of(context)
-                                        .hideCurrentSnackBar();
-                                    Navigator.pushReplacementNamed(
-                                      context,
-                                      Routes.register,
-                                    );
-                                  },
-                                ),
-                              ));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  _buildRegisterSnackBar(res, context));
 
                               if (res["status"] == false) {
                                 Navigator.pushReplacementNamed(
                                   context,
-                                  Routes.shopping,
+                                  Routes.login,
                                 );
                               }
                             }
@@ -141,7 +115,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 }
 
-class RegistrationForm extends StatelessWidget {
+class _RegistrationForm extends StatelessWidget {
   final TextEditingController phoneController;
   final TextEditingController emailController;
   final TextEditingController usernameController;
@@ -149,8 +123,7 @@ class RegistrationForm extends StatelessWidget {
   final TextEditingController lastNameController;
   final TextEditingController firstNameController;
   final TextEditingController confirmPasswordController;
-  const RegistrationForm({
-    super.key,
+  const _RegistrationForm({
     required this.phoneController,
     required this.emailController,
     required this.passwordController,
@@ -221,4 +194,48 @@ class RegistrationForm extends StatelessWidget {
       ],
     );
   }
+}
+
+SnackBar _buildRegisterSnackBar(Map<String, bool> res, BuildContext context) {
+  return SnackBar(
+    backgroundColor: res["status"] == false ? Colors.green : Colors.red,
+    content: RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text:
+                '${res["status"] == false ? "Account Created Successfully" : res["email"] == true ? "This email already exist" : "This username already exist"}\n',
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          TextSpan(
+            text: res["status"] == false
+                ? "will redirect to shopping page"
+                : "redirect to login page",
+            style: const TextStyle(
+              fontSize: 15,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontStyle: FontStyle.italic,
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ],
+      ),
+    ),
+    duration: const Duration(seconds: 2),
+    action: SnackBarAction(
+      label: res["status"] == false ? "OK" : "create",
+      textColor: Colors.white,
+      onPressed: () {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        Navigator.pushReplacementNamed(
+          context,
+          Routes.register,
+        );
+      },
+    ),
+  );
 }
