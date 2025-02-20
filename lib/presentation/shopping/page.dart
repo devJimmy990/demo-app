@@ -1,6 +1,5 @@
+import 'package:demo_app/presentation/widgets/app_drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:demo_app/core/routes.dart';
-import 'package:demo_app/presentation/shopping/hot_offers.dart';
 import 'package:demo_app/presentation/shopping/our_products.dart';
 import 'package:demo_app/presentation/shopping/products_list.dart';
 
@@ -12,19 +11,14 @@ class ShoppingPage extends StatelessWidget {
     final mediaQuery = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
-            onPressed: () =>
-                Navigator.pushReplacementNamed(context, Routes.login)),
+        backgroundColor: Colors.teal,
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           'Shopping App',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.teal,
       ),
+      drawer: AppDrawer(),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Container(
@@ -41,7 +35,7 @@ class ShoppingPage extends StatelessWidget {
               ProductsList(),
 
               // hot offers
-              HotOffers()
+              // HotOffers()
             ],
           ),
         ),
