@@ -1,8 +1,11 @@
-import '../../widgets/ui/inputs.dart';
+import 'package:demo_app/controller/user.dart';
+import 'package:demo_app/data/model/user.dart';
+import 'package:demo_app/presentation/widgets/ui/inputs.dart';
 import 'package:flutter/material.dart';
 import 'package:demo_app/core/routes.dart';
+import 'package:demo_app/core/validator/index.dart';
 import 'package:demo_app/presentation/widgets/auth/auth_option.dart';
-import 'package:demo_app/presentation/screens/auth/func/methods.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -74,18 +77,25 @@ class _LoginPageState extends State<LoginPage> {
                           },
                         ),
                         ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              bool res = isFoundUser(
-                                _emailController.text,
-                                _passwordController.text,
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  _buildLoginSnackBar(res, context));
-
-                              if (res) {
+                              final controller = context.read<UserController>();
+                              try {
+                                await controller.login(UserModel.login(
+                                  email: _emailController.text,
+                                  password: _passwordController.text,
+                                ));
                                 Navigator.pushReplacementNamed(
                                     context, Routes.shopping);
+                                buildSnackBar(
+                                  bgColor: Colors.green,
+                                  msg: "login successfully",
+                                );
+                              } catch (e) {
+                                buildSnackBar(
+                                  bgColor: Colors.red,
+                                  msg: FirebaseValidator.login(e.toString()),
+                                );
                               }
                             }
                           },
@@ -109,47 +119,16 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  SnackBar _buildLoginSnackBar(bool res, BuildContext context) {
-    return SnackBar(
-      backgroundColor: res ? Colors.green : Colors.red,
-      content: RichText(
-        text: TextSpan(
-          children: [
-            TextSpan(
-              text:
-                  '${res ? "Login Successful" : "Invalid email or password"}\n',
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            TextSpan(
-              text: res
-                  ? "will redirect to shopping page"
-                  : "create account or try again",
-              style: const TextStyle(
-                fontSize: 15,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontStyle: FontStyle.italic,
-                decoration: TextDecoration.underline,
-              ),
-            ),
-          ],
-        ),
-      ),
+  void buildSnackBar({
+    required Color bgColor,
+    required String msg,
+    SnackBarAction? action,
+  }) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      backgroundColor: bgColor,
+      content: Text(msg),
       duration: const Duration(seconds: 2),
-      action: SnackBarAction(
-        label: res ? "OK" : "create",
-        textColor: Colors.white,
-        onPressed: () {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          Navigator.pushReplacementNamed(
-            context,
-            Routes.register,
-          );
-        },
-      ),
-    );
+      action: action,
+    ));
   }
 }
