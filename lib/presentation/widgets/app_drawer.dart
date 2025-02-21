@@ -1,9 +1,11 @@
-import 'package:demo_app/controller/user.dart';
-import 'package:demo_app/core/extention/user.dart';
-import 'package:demo_app/core/routes.dart';
-import 'package:demo_app/data/model/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:demo_app/core/routes.dart';
+import 'package:demo_app/data/model/user.dart';
+import 'package:demo_app/controller/user.dart';
+import 'package:demo_app/core/device_info.dart';
+import 'package:demo_app/core/extention/user.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -28,6 +30,7 @@ class _BuildGuestDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DeviceInfo deviceInfo = DeviceInfo();
     return Column(
       children: [
         DrawerHeader(
@@ -42,6 +45,20 @@ class _BuildGuestDrawer extends StatelessWidget {
           ),
         ),
         Spacer(),
+        ListTile(
+          leading: Icon(Icons.info),
+          title: Text('Device Info'),
+          onTap: () async {
+            AwesomeDialog(
+              context: context,
+              dialogType: DialogType.info,
+              animType: AnimType.rightSlide,
+              title: 'Device Info',
+              desc: deviceInfo.info.toString(),
+              btnOkOnPress: () {},
+            ).show();
+          },
+        ),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
@@ -59,6 +76,7 @@ class _BuildUserDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DeviceInfo deviceInfo = DeviceInfo();
     return Column(
       children: [
         DrawerHeader(
@@ -77,6 +95,20 @@ class _BuildUserDrawer extends StatelessWidget {
           ),
         ),
         Spacer(),
+        ListTile(
+          leading: Icon(Icons.info),
+          title: Text('Device Info'),
+          onTap: () async {
+            AwesomeDialog(
+              context: context,
+              dialogType: DialogType.info,
+              animType: AnimType.rightSlide,
+              title: 'Device Info',
+              desc: deviceInfo.info.toString(),
+              btnOkOnPress: () {},
+            ).show();
+          },
+        ),
         ListTile(
           leading: Icon(Icons.account_box),
           title: Text('Account'),

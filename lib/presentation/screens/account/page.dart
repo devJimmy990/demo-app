@@ -25,12 +25,11 @@ class AccountPage extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 60,
-              backgroundImage: user.avatar.isNotEmpty
-                  ? NetworkImage(user.avatar) 
-                  : null,
+              backgroundImage:
+                  user.avatar.isNotEmpty ? NetworkImage(user.avatar) : null,
               child: user.avatar.isEmpty
                   ? Text(
-                      user.castNameAbb(), 
+                      user.castNameAbb(),
                       style: const TextStyle(fontSize: 40),
                     )
                   : null,
