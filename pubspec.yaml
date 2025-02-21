@@ -31,18 +31,27 @@ dependencies:
   flutter:
     sdk: flutter
 
+  #controller package
   provider: ^6.1.2
+  
+  #device_feature packages
+  geolocator: ^13.0.2
   image_picker: ^1.1.2
+  device_info_plus: ^11.3.0
+  google_maps_flutter: ^2.10.0
+  
+  #data package
+  shared_preferences: ^2.3.5
+
+  #ui packages 
   awesome_dialog: ^3.2.1
   cupertino_icons: ^1.0.8
-  device_info_plus: ^11.3.0
   flutter_expandable_fab: ^2.3.0
   
   #firebase packages 
   firebase_auth: ^5.5.0
   firebase_core: ^3.12.0
   cloud_firestore: ^5.6.3
-  shared_preferences: ^2.3.5
 
 dev_dependencies:
   flutter_test:
