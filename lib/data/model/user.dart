@@ -1,15 +1,18 @@
 class UserModel {
   late String? id;
   late String email, fName, lName, phone, password, avatar;
+  late List<String> images;
 
-  UserModel({
-    this.id,
-    this.avatar = "",
-    required this.email,
-    required this.fName,
-    required this.lName,
-    required this.phone,
-  });
+  UserModel(
+      {this.id,
+      this.avatar = "",
+      required this.email,
+      required this.fName,
+      required this.lName,
+      required this.phone,
+      List<String>? images}) {
+    this.images = images ?? [];
+  }
 
   UserModel.register({
     this.id,
@@ -35,6 +38,12 @@ class UserModel {
       fName: json['fName'],
       avatar: json['avatar'],
     );
+  }
+
+  void addUserImage(String url) {
+    if (!images.contains(url)) {
+      images.add(url);
+    }
   }
 
   Map<String, dynamic> toJson() {

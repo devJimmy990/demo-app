@@ -23,7 +23,6 @@ class DeviceInfo {
         await _getIOSDeviceInfo(deviceInfo);
       }
     } catch (e) {
-      print(e.toString());
       rethrow;
     }
   }
