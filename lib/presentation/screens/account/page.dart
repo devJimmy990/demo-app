@@ -1,3 +1,4 @@
+import 'package:demo_app/presentation/screens/account/tabs/map.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:demo_app/controller/user.dart';
@@ -14,7 +15,7 @@ class AccountPage extends StatelessWidget {
     UserModel user = context.read<UserController>().user!;
 
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.teal,
@@ -52,6 +53,7 @@ class AccountPage extends StatelessWidget {
                 tabs: [
                   Tab(icon: Icon(Icons.person), text: "Profile"),
                   Tab(icon: Icon(Icons.grid_view_sharp), text: "Gallery"),
+                  Tab(icon: Icon(Icons.location_on), text: "Location"),
                 ],
               ),
             ),
@@ -60,6 +62,7 @@ class AccountPage extends StatelessWidget {
                 children: [
                   BuildProfileTab(user),
                   BuildGalleryTab(),
+                  BuildMapTab()
                 ],
               ),
             ),

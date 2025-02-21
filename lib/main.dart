@@ -1,3 +1,4 @@
+import 'package:demo_app/core/location.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:demo_app/core/routes.dart';
@@ -14,6 +15,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await SharedPreference.initialize();
+  await DeviceLocation.initialize();
   runApp(const MyApp());
 }
 

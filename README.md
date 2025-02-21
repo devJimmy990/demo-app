@@ -1,15 +1,20 @@
 # Advanced Flutter Development - Device Features Module
 
-##   create app where the user can pick multiple images and display them
-Create your own gallery in your application
+## display Google Map and Place Marker
+integrate Google Maps into your Flutter application and place a marker on Cairo, Egypt
 
-
-- Title: add list-view to your app
-- create a page that has ListView where the images will be displayed.
-
+### Requirement 1
+  - Title: add Google Maps to your application
+  - Description:  create a page with a title in the appBar ""Google Map""
+place in your screen Google map.
+### Requirement 2
+  - Title: add marker on Cairo, Egypt
+  - Description: you are asked to place the red marker of 
+Google Maps on your screen on cairo government in Egypt.
 ==================================================
 #### Draft
-  - add `flutter_expandable_fab` `image_picker` packages to pubspec.yml
-  - create `tab-bar` to manage the account page:
-    - design `profile_tab` for displaying user info {email, phone}
-    - design `gallery_tab` for displaying picked images and `expandable_fab` for choosing images {camera, gallery}
+  - add `google_maps_flutter` `geolocator` packages to pubspec.yml
+  - create `location` class to manage the current location
+  - use location class in `map` to start with current location
+  - add button to `redirect` to cairo
+  
