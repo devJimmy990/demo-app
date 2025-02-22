@@ -1,20 +1,21 @@
 # Advanced Flutter Development - Device Features Module
 
-## display Google Map and Place Marker
-integrate Google Maps into your Flutter application and place a marker on Cairo, Egypt
+## add Biometric Authentication using Fingerprint
+Do you remember your shopping app?
+you need biometric authentication to access your profile page 
 
 ### Requirement 1
-  - Title: add Google Maps to your application
-  - Description:  create a page with a title in the appBar ""Google Map""
-place in your screen Google map.
+  - Title: add profile icon at the top right of the page
+  - Description: this profile page should contain your image, full name, email.
 ### Requirement 2
-  - Title: add marker on Cairo, Egypt
-  - Description: you are asked to place the red marker of 
-Google Maps on your screen on cairo government in Egypt.
+  - Title: add biometric authentication 
+  - Description: you need to add authentication using a fingerprint in order to be able to access your profile so once profile icon pressed it asks the user for his fingerprint to access his profile.
 ==================================================
 #### Draft
-  - add `google_maps_flutter` `geolocator` packages to pubspec.yml
-  - create `location` class to manage the current location
-  - use location class in `map` to start with current location
-  - add button to `redirect` to cairo
+  - add `local_auth` package to pubspec.yml.
+  - create `biometric` class to manage the device sensor.
+  - add `method` loginWithBiometric in controller.
+  - use biometric class in `login` to check if logged before or first:
+    - first login: hide option and login with email and password.
+    - logged before: after logout user can log with biometric using stored credential.
   
