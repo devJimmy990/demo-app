@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:demo_app/data/model/device_info_model.dart';
+import 'package:demo_app/data/model/device_info.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
 class DeviceInfo {
