@@ -1,4 +1,5 @@
 import 'package:demo_app/controller/user.dart';
+import 'package:demo_app/core/features/biometric.dart';
 import 'package:demo_app/data/model/user.dart';
 import 'package:demo_app/presentation/widgets/ui/inputs.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -30,7 +32,6 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-
     super.dispose();
   }
 
@@ -70,36 +71,32 @@ class _LoginPageState extends State<LoginPage> {
                           label: "Password",
                           controller: _passwordController,
                           validator: (value) {
-                            if (_emailController.text.isEmpty) {
+                            if (_passwordController.text.isEmpty) {
                               return "required";
                             }
                             return null;
                           },
                         ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              final controller = context.read<UserController>();
-                              try {
-                                await controller.login(UserModel.login(
-                                  email: _emailController.text,
-                                  password: _passwordController.text,
-                                ));
-                                Navigator.pushReplacementNamed(
-                                    context, Routes.shopping);
-                                buildSnackBar(
-                                  bgColor: Colors.green,
-                                  msg: "login successfully",
-                                );
-                              } catch (e) {
-                                buildSnackBar(
-                                  bgColor: Colors.red,
-                                  msg: FirebaseValidator.login(e.toString()),
-                                );
-                              }
-                            }
-                          },
-                          child: const Text("Login"),
+                        Row(
+                          spacing: 25,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              onPressed: _isLoading ? null : loginWithEmail,
+                              child: _isLoading
+                                  ? CircularProgressIndicator()
+                                  : const Text("Login"),
+                            ),
+                            if (Biometric.isAvailable)
+                              IconButton(
+                                onPressed:
+                                    _isLoading ? null : loginWithBiometric,
+                                icon: Icon(
+                                  Icons.fingerprint,
+                                  size: 42,
+                                ),
+                              ),
+                          ],
                         ),
                         buildAuthOption(
                           msg: "Don't have an account? ",
@@ -117,6 +114,46 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  void loginWithBiometric() {
+    Biometric.authenticate(localizedReason: "Please authenticate to login")
+        .then((value) async {
+      if (value) {
+        final controller = context.read<UserController>();
+        await controller.loginWithBiometric();
+        Navigator.pushReplacementNamed(context, Routes.shopping);
+      }
+    });
+  }
+
+  void loginWithEmail() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      final controller = context.read<UserController>();
+      try {
+        await controller.loginWithEmailAndPassword(UserModel.login(
+          email: _emailController.text,
+          password: _passwordController.text,
+        ));
+        Navigator.pushReplacementNamed(context, Routes.shopping);
+        buildSnackBar(
+          bgColor: Colors.green,
+          msg: "login successfully",
+        );
+      } catch (e) {
+        buildSnackBar(
+          bgColor: Colors.red,
+          msg: FirebaseValidator.login(e.toString()),
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   void buildSnackBar({
