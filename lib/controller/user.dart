@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:demo_app/core/features/biometric.dart';
 import 'package:demo_app/core/shared_preference.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,14 +30,33 @@ class UserController extends ChangeNotifier {
   UserModel? get user => _user;
   List<String> get images => _user?.images ?? [];
 
-  Future<void> login(UserModel user) async {
+  Future<void> loginWithEmailAndPassword(UserModel user) async {
     try {
       await _auth
           .signInWithEmailAndPassword(
               email: user.email, password: user.password)
           .then((result) {
         if (result.user != null) {
-          SharedPreference.setString(key: "user", value: result.user!.uid);
+          _cacheUserData(uid: result.user!.uid, user: user);
+          _fetchUserData(result.user!.uid);
+        }
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> loginWithBiometric() async {
+    try {
+      Map<String, dynamic>? credential =
+          jsonDecode(SharedPreference.getString(key: "credential")!);
+      if (credential == null) return;
+      final String email = credential["email"]!;
+      final String password = credential["password"]!;
+      await _auth
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((result) {
+        if (result.user != null) {
           _fetchUserData(result.user!.uid);
         }
       });
@@ -46,8 +67,8 @@ class UserController extends ChangeNotifier {
 
   Future<void> logout() async {
     await _auth.signOut();
-    SharedPreference.remove(key: "user");
     value = null;
+    SharedPreference.setBool(key: "auth", value: false);
   }
 
   Future<void> createUser(UserModel user) async {
@@ -74,6 +95,18 @@ class UserController extends ChangeNotifier {
         notifyListeners();
       }
     });
+  }
+
+  void _cacheUserData({required String uid, required UserModel user}) {
+    final Map<String, dynamic> credential = {
+      "email": user.email,
+      "password": user.password
+    };
+    SharedPreference.setBool(key: "auth", value: true);
+    SharedPreference.setString(key: "uid", value: uid);
+    SharedPreference.setString(
+        key: "credential", value: jsonEncode(credential));
+    Biometric.checkBiometricAvailability();
   }
 
   addUserImages(File file) {
