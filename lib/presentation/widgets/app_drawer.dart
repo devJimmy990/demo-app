@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:demo_app/core/routes.dart';
 import 'package:demo_app/data/model/user.dart';
 import 'package:demo_app/controller/user.dart';
-import 'package:demo_app/core/device_info.dart';
+import 'package:demo_app/core/features/device_info.dart';
 import 'package:demo_app/core/extention/user.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 

@@ -1,4 +1,5 @@
-import 'package:demo_app/core/location.dart';
+import 'package:demo_app/core/features/biometric.dart';
+import 'package:demo_app/core/features/location.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:demo_app/core/routes.dart';
@@ -16,6 +17,7 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await SharedPreference.initialize();
   await DeviceLocation.initialize();
+  await Biometric.initialize();
   runApp(const MyApp());
 }
 
