@@ -1,15 +1,19 @@
-# demo_app
+# Advanced Flutter Development - Design Patterns Module
 
-A new Flutter project.
+## simple payment system
+create a simple payment system using SOLID principles.
 
-## Commands 
-- `flutter create demo_app` used to create a new flutter project
+  - Title: create a simple payment system using SOLID principles.
+  - Description: 
+    - create payment class and its methods (cash payment, credit payment). 
+    - Apply SOLID principles to it.
 
-- `cd demo_app` used to redirect to project directory
 
-- `flutter run` used to run the project
-
-### Other Needed Commands 
-- `flutter clean` used to remove cached data and build files
-
-- `flutter get` used to import all packages {dependencies} in pubspec.yaml
+==================================================
+#### Draft
+  - `create` payment `sealed` class
+  - implement `payment` to payment methods {cash, credit}
+  - define `processor` class to manage payment
+  - create `payment-screen` to display the amount of payment with changeable value
+  - create `payment-processor` to handle payment method {`cash`, `credit`}
+  - show `snack-bar` for action
